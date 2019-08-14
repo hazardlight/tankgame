@@ -3,6 +3,7 @@
 
 #include "TankPlayerController.h"
 #include "Public/CollisionQueryParams.h"
+#include "Tank.h"
 
 
 
