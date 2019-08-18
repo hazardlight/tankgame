@@ -7,31 +7,40 @@
 #include "Kismet/GameplayStatics.h"
 #include "TankBarrel.h"
 #include "TankTurret.h"
+#include "GenericPlatform/GenericPlatformMath.h"
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true; //TODO Should this really tick?
+	PrimaryComponentTick.bCanEverTick = false; //TODO Should this really tick?
 
 	// ...
 }
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
+	if (!BarrelToSet)
+	{
+		return;
+	}
 	Barrel = BarrelToSet;
 }
 
 void UTankAimingComponent::SetTurretReference(UTankTurret* TurretToSet)
 {
+	if (!TurretToSet)
+	{
+		return;
+	}
 	//TODO Set Turret Reference
 	Turret = TurretToSet;
 }
 
 void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 {
-	if (!Barrel) { return; }
+	if (!Barrel || !Turret) { return; } //exit if no barrel or turret reference found
 
 	FVector OutLaunchVelocity(0);
 	FVector StartLocation = Barrel->GetSocketLocation(FName("Projectile"));
@@ -54,14 +63,15 @@ void UTankAimingComponent::AimAt(FVector HitLocation, float LaunchSpeed)
 	{
 		auto OurTankName = GetOwner()->GetName();
 		auto AimDirection = OutLaunchVelocity.GetSafeNormal();
+		//RotateTurretToward(AimDirection); //turret rotates if fire solution is valid??
 		MoveBarrelToward(AimDirection);
 		auto Time = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("%f: Aim Solution Found"), Time)
+		//UE_LOG(LogTemp, Warning, TEXT("%f: Aim Solution Found"), Time)
 	}
 	else
 	{
 		auto Time = GetWorld()->GetTimeSeconds();
-		UE_LOG(LogTemp, Warning, TEXT("%f: No Aim Solution Found"), Time)
+		//UE_LOG(LogTemp, Warning, TEXT("%f: No Aim Solution Found"), Time)
 	}
 
 	//auto OurTankName = GetOwner()->GetName();
@@ -78,8 +88,27 @@ void UTankAimingComponent::MoveBarrelToward(FVector AimDirection)
 	//UE_LOG(LogTemp, Warning, TEXT("AimAsRotator: %s"), *DeltaRotator.ToString())
 
 	Barrel->Elevate(DeltaRotator.Pitch);
+	Turret->Rotate(DeltaRotator.Yaw);
+
 }
+/*
 void UTankAimingComponent::RotateTurretToward(FVector AimDirection)
 {
+	//auto TurretRotator = Turret->GetUpVector().Rotation(); //need to get Z direction
+	auto TurretRotator = Turret->GetForwardVector().Rotation(); //need to get Z direction
+
+	auto AimAsRotator = AimDirection.Rotation();
+	//auto DeltaRotator = FGenericPlatformMath::Abs<FRotator>(AimAsRotator) - TurretRotator;
+	//auto DeltaRotator = AimAsRotator - TurretRotator;
+	auto DeltaRotator = AimAsRotator - TurretRotator;
+
+
+
+	//UE_LOG(LogTemp, Warning, TEXT("AimAsRotator: %s"), *AimAsRotator.ToString())
+
+
+	Turret->Rotate(DeltaRotator.Yaw);
+
+
 	//TODO work out difference between current turret rotation and AimDirection
-}
+}*/

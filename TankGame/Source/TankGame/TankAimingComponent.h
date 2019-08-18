@@ -36,5 +36,5 @@ private:
 	UTankTurret* Turret = nullptr;
 
 	//TODO declare function to rotate turret
-	void RotateTurretToward(FVector AimDirection);
+	//void RotateTurretToward(FVector AimDirection);
 };
