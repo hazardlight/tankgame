@@ -11,6 +11,7 @@ class UTankBarrel;
 class UTankTurret;
 class UTankAimingComponent;
 class AProjectile;
+class UTankMovementComponent;
 
 UCLASS()
 class TANKGAME_API ATank : public APawn
@@ -33,6 +34,9 @@ public:
 protected:
 	UTankAimingComponent* TankAimingComponent = nullptr;
 
+	UPROPERTY(BlueprintReadOnly)
+	UTankMovementComponent* TankMovementComponent = nullptr;
+
 private:
 	// Sets default values for this pawn's properties
 	ATank();
@@ -44,11 +48,16 @@ private:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	//TODO find a sensible launch speed
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float LaunchSpeed = 100000; //starting value of 1000m/s
 
-	UPROPERTY(EditAnywhere, Category = Setup)
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	UTankBarrel* Barrel = nullptr; //local barrel ref for spawning projectile
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float ReloadTimeInSeconds = 3.0;
+
+	double LastFireTime = 0.0;
 };
