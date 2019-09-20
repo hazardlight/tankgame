@@ -3,6 +3,7 @@
 
 #include "TankMovementComponent.h"
 #include "TankTrack.h"
+#include "Math/Vector.h"
 
 void UTankMovementComponent::Initialize(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet)
 {
@@ -13,10 +14,17 @@ void UTankMovementComponent::Initialize(UTankTrack* LeftTrackToSet, UTankTrack* 
 
 void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
 {
-	auto TankName = GetOwner()->GetName();
-	auto MoveVelocityString = MoveVelocity.ToString();
-	UE_LOG(LogTemp, Warning, TEXT("Tank %s: Move Velocity: %s"), *TankName, *MoveVelocityString)
+	//auto TankName = GetOwner()->GetName();
 
+	auto TankForward = GetOwner()->GetActorForwardVector().GetSafeNormal();
+	auto AIForwardIntention = MoveVelocity.GetSafeNormal();
+	//UE_LOG(LogTemp, Warning, TEXT("Tank %s: Move Velocity: %s"), *TankName, *MoveVelocityString)
+
+	float ForwardThrow = FVector::DotProduct(AIForwardIntention, TankForward);
+	IntendMoveForward(ForwardThrow);
+
+	float RotateThrow = FVector::CrossProduct(TankForward, AIForwardIntention).Z;
+	IntendTurnRight(RotateThrow);
 }
 
 void UTankMovementComponent::IntendMoveForward(float Throw)
