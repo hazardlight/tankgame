@@ -11,9 +11,17 @@ void UTankMovementComponent::Initialize(UTankTrack* LeftTrackToSet, UTankTrack* 
 	RightTrack = RightTrackToSet;
 }
 
+void UTankMovementComponent::RequestDirectMove(const FVector& MoveVelocity, bool bForceMaxSpeed)
+{
+	auto TankName = GetOwner()->GetName();
+	auto MoveVelocityString = MoveVelocity.ToString();
+	UE_LOG(LogTemp, Warning, TEXT("Tank %s: Move Velocity: %s"), *TankName, *MoveVelocityString)
+
+}
+
 void UTankMovementComponent::IntendMoveForward(float Throw)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Intend to move forward: %f"), Throw)
+	//UE_LOG(LogTemp, Warning, TEXT("Intend to move forward: %f"), Throw)
 
 	//TODO clamp max throttle value so player can't overdrive
 
