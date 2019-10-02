@@ -19,14 +19,15 @@ class TANKGAME_API ATank : public APawn
 	GENERATED_BODY()
 
 public:
+	
+	//refactoring
+	//UFUNCTION(BlueprintCallable, Category = Setup)
+	//void SetBarrelReference(UTankBarrel* BarrelToSet);
+
+	//UFUNCTION(BlueprintCallable, Category = Setup)
+	//void SetTurretReference(UTankTurret* TurretToSet);
+
 	void AimAt(FVector HitLocation);
-
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
-
-	//TODO set the turret reference
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void SetTurretReference(UTankTurret* TurretToSet);
 
 	UFUNCTION(BlueprintCallable, Category = Setup)
 	void Fire();
@@ -45,8 +46,9 @@ private:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	//refactoring
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	//TODO find a sensible launch speed
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
@@ -55,6 +57,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
 
+	//TODO Remove
 	UTankBarrel* Barrel = nullptr; //local barrel ref for spawning projectile
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)

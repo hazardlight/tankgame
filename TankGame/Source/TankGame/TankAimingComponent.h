@@ -29,10 +29,12 @@ public:
 	// Sets default values for this component's properties
 	UTankAimingComponent();
 
-	void SetBarrelReference(UTankBarrel* BarrelToSet);
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void Initialize(UTankBarrel* BarrelToSet, UTankTurret* TurretToSet);
 
-	//TODO add SetTurretReference()
-	void SetTurretReference(UTankTurret* TurretToSet);
+	//refactoring
+	//void SetBarrelReference(UTankBarrel* BarrelToSet);
+	//void SetTurretReference(UTankTurret* TurretToSet);
 
 	void AimAt(FVector HitLocation, float LaunchSpeed);
 
@@ -41,11 +43,10 @@ protected:
 	EFiringStatus FiringStatus = EFiringStatus::Reloading;
 
 private:
-	UTankBarrel* Barrel = nullptr;
 
 	void MoveBarrelToward(FVector AimDirection);
 
-	//TODO declare pointer to turret
+	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 
 	//TODO declare function to rotate turret
