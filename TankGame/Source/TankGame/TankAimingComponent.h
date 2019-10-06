@@ -18,6 +18,7 @@ enum class EFiringStatus : uint8
 //forward declaration
 class UTankBarrel; 
 class UTankTurret;
+class AProjectile;
 
 //hold barrel's properties and elevate method
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -36,11 +37,17 @@ public:
 	//void SetBarrelReference(UTankBarrel* BarrelToSet);
 	//void SetTurretReference(UTankTurret* TurretToSet);
 
-	void AimAt(FVector HitLocation, float LaunchSpeed);
+	//void AimAt(FVector HitLocation, float LaunchSpeed);
+	void AimAt(FVector HitLocation);
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void Fire();
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = State)
 	EFiringStatus FiringStatus = EFiringStatus::Locked;
+
+	
 
 private:
 
@@ -49,8 +56,21 @@ private:
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float LaunchSpeed = 100000; //starting value of 1000m/s
+
 	//TODO declare function to rotate turret
 	//void RotateTurretToward(FVector AimDirection);
+
+
+	//set this UPROPERTY because of a UE4 bug where this value was reset to NONE instead of Projectile_BP
+	UPROPERTY(EditDefaultsOnly, Category = Setup)
+	TSubclassOf<AProjectile> ProjectileBlueprint;
+
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+	float ReloadTimeInSeconds = 3.0;
+
+	double LastFireTime = 0.0;
 
 
 };

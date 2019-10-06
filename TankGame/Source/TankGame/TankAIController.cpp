@@ -4,8 +4,7 @@
 #include "TankAIController.h"
 #include "Engine/World.h"
 #include "GameFramework/Actor.h"
-#include "tank.h"
-
+#include "TankAimingComponent.h"
 
 void ATankAIController::BeginPlay()
 {
@@ -39,23 +38,24 @@ void ATankAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	auto AITank = Cast<ATank>(GetPawn());
-	auto PlayerTank = Cast<ATank>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	auto AITank = GetPawn();
+	auto AimingComponent = AITank->FindComponentByClass<UTankAimingComponent>();
+	auto PlayerTank = GetWorld()->GetFirstPlayerController()->GetPawn();
 	
 	//if (GetPlayerTank())
-	if(ensure(PlayerTank))
-	{
-		//move toward player
-		MoveToActor(PlayerTank, AcceptanceRadius);
-		
+	if (!ensure(PlayerTank && AITank)) { return; }
+	
+	//move toward player
+	MoveToActor(PlayerTank, AcceptanceRadius);
 
-		//Aim toward the player
-		//GetControlledTank()->AimAt(GetPlayerTank()->GetActorLocation());
-		AITank->AimAt(PlayerTank->GetActorLocation());
+	//Aim toward the player
+	//GetControlledTank()->AimAt(GetPlayerTank()->GetActorLocation());
+	AimingComponent->AimAt(PlayerTank->GetActorLocation());
 
-		//GetControlledTank()->Fire();
-		AITank->Fire(); //TODO don't fire every frame
-	}
+	//GetControlledTank()->Fire();
+
+	AimingComponent->Fire(); //TODO don't fire every frame
+	
 }
 
 /*

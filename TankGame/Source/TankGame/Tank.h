@@ -7,11 +7,6 @@
 #include "GameFramework/Pawn.h"
 #include "Tank.generated.h"
 
-class UTankBarrel;
-class UTankTurret;
-class UTankAimingComponent;
-class AProjectile;
-
 
 UCLASS()
 class TANKGAME_API ATank : public APawn
@@ -27,14 +22,15 @@ public:
 	//UFUNCTION(BlueprintCallable, Category = Setup)
 	//void SetTurretReference(UTankTurret* TurretToSet);
 
-	void AimAt(FVector HitLocation);
+	//void AimAt(FVector HitLocation);
 
-	UFUNCTION(BlueprintCallable, Category = Setup)
-	void Fire();
+	//UFUNCTION(BlueprintCallable, Category = Setup)
+	//void Fire();
 
-protected:
-	UPROPERTY(BlueprintReadOnly)
-	UTankAimingComponent* TankAimingComponent = nullptr;
+	//refactoring
+//protected:
+	//UPROPERTY(BlueprintReadOnly)
+	//UTankAimingComponent* TankAimingComponent = nullptr;
 
 	//UPROPERTY(BlueprintReadOnly)
 	//UTankMovementComponent* TankMovementComponent = nullptr;
@@ -51,17 +47,17 @@ private:
 	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	//TODO remove once firing is moved to AimingComponent
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float LaunchSpeed = 100000; //starting value of 1000m/s
+	//UPROPERTY(EditDefaultsOnly, Category = Firing)
+	//float LaunchSpeed = 100000; //starting value of 1000m/s
 
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	TSubclassOf<AProjectile> ProjectileBlueprint;
+	//UPROPERTY(EditDefaultsOnly, Category = Setup)
+	//TSubclassOf<AProjectile> ProjectileBlueprint;
 
 	//TODO Remove
-	UTankBarrel* Barrel = nullptr; //local barrel ref for spawning projectile
+	//UTankBarrel* Barrel = nullptr; //local barrel ref for spawning projectile
 
-	UPROPERTY(EditDefaultsOnly, Category = Firing)
-	float ReloadTimeInSeconds = 3.0;
+	//UPROPERTY(EditDefaultsOnly, Category = Firing)
+	//float ReloadTimeInSeconds = 3.0;
 
-	double LastFireTime = 0.0;
+	//double LastFireTime = 0.0;
 };

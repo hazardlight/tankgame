@@ -2,8 +2,6 @@
 
 
 #include "Tank.h"
-#include "TankAimingComponent.h"
-#include "TankTurret.h"
 #include "TankBarrel.h"
 #include "Projectile.h"
 
@@ -28,7 +26,7 @@ void ATank::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("DONKEY C++ BeginPlay() -- %s"), *TankName)
 	Super::BeginPlay();
 
-	TankAimingComponent = FindComponentByClass<UTankAimingComponent>();
+	//TankAimingComponent = FindComponentByClass<UTankAimingComponent>();
 	
 }
 
@@ -41,12 +39,13 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 }
 */
 
+/*
 void ATank::AimAt(FVector HitLocation)
 {
 	if (!ensure(TankAimingComponent)) { return; }
 	TankAimingComponent->AimAt(HitLocation, LaunchSpeed);
 }
-
+*/
 /*
 void ATank::SetBarrelReference(UTankBarrel* BarrelToSet)
 {
@@ -60,6 +59,7 @@ void ATank::SetTurretReference(UTankTurret* TurretToSet)
 }
 */
 
+/*
 void ATank::Fire()
 {	
 	if (!ensure(Barrel)) { return; }
@@ -79,3 +79,4 @@ void ATank::Fire()
 		LastFireTime = FPlatformTime::Seconds();
 	}
 }
+*/

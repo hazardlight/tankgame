@@ -3,16 +3,17 @@
 
 #include "TankPlayerController.h"
 #include "Public/CollisionQueryParams.h"
-#include "Tank.h"
 #include "TankAimingComponent.h"
-
+#include "GameFramework/Pawn.h"
 
 
 void ATankPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	auto AimingComponent = GetControlledTank()->FindComponentByClass<UTankAimingComponent>();
-
+	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)) { return; }
+	FoundAimingComponent(AimingComponent);
+	/*
 	if (ensure(AimingComponent))
 	{
 		FoundAimingComponent(AimingComponent);
@@ -21,7 +22,7 @@ void ATankPlayerController::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PlayerController can't find AimingComponent at BeginPlay"))
 	}
-	/*
+	
 	auto ControlledTank = GetControlledTank();
 	if (!ControlledTank)
 	{
@@ -46,24 +47,24 @@ void ATankPlayerController::Tick(float DeltaTime)
 	AimTowardCrosshair();
 }
 
+/*
 ATank* ATankPlayerController::GetControlledTank() const 
 {
-	return Cast<ATank>(GetPawn());
+	//return Cast<ATank>(GetPawn());
+	return GetPawn();
 }
-
+*/
 void ATankPlayerController::AimTowardCrosshair()
 {
-	if (!ensure(GetControlledTank())) 
-	{
-		return;
-	}
+	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
+	if (!ensure(AimingComponent)){ return; }
 
 	FVector HitLocation; //Out Parameter
 
 	//is going to line trace
 	if (GetSightRayHitLocation(HitLocation)) //if the line trace hits the landscape
 	{
-		GetControlledTank()->AimAt(HitLocation);
+		AimingComponent->AimAt(HitLocation);
 	}
 	
 }
