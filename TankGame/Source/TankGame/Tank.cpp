@@ -8,8 +8,8 @@
 // Sets default values
 ATank::ATank()
 {
-	auto TankName = GetName();
-	UE_LOG(LogTemp, Warning, TEXT("DONKEY C++ Constructor -- %s"), *TankName)
+	//auto TankName = GetName();
+	//UE_LOG(LogTemp, Warning, TEXT("DONKEY C++ Constructor -- %s"), *TankName)
 
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -20,6 +20,7 @@ ATank::ATank()
 }
 
 // Called when the game starts or when spawned
+/*
 void ATank::BeginPlay()
 {
 	auto TankName = GetName();
@@ -29,6 +30,7 @@ void ATank::BeginPlay()
 	//TankAimingComponent = FindComponentByClass<UTankAimingComponent>();
 	
 }
+*/
 
 // Called to bind functionality to input
 /*

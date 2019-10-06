@@ -45,13 +45,23 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = State)
-	EFiringStatus FiringStatus = EFiringStatus::Locked;
+	EFiringStatus FiringStatus = EFiringStatus::Reloading;
 
-	
+	//set this UPROPERTY because of a UE4 bug where this value was reset to NONE instead of Projectile_BP. Needs to be in the protected: category
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Setup)
+	TSubclassOf<AProjectile> ProjectileBlueprint;
 
 private:
 
+	virtual void BeginPlay() override;
+
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	bool IsBarrelMoving();
+
 	void MoveBarrelToward(FVector AimDirection);
+
+	FVector AimDirection;
 
 	UTankBarrel* Barrel = nullptr;
 	UTankTurret* Turret = nullptr;
@@ -63,9 +73,7 @@ private:
 	//void RotateTurretToward(FVector AimDirection);
 
 
-	//set this UPROPERTY because of a UE4 bug where this value was reset to NONE instead of Projectile_BP
-	UPROPERTY(EditDefaultsOnly, Category = Setup)
-	TSubclassOf<AProjectile> ProjectileBlueprint;
+	
 
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float ReloadTimeInSeconds = 3.0;
