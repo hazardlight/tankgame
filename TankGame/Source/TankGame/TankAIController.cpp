@@ -54,8 +54,11 @@ void ATankAIController::Tick(float DeltaTime)
 
 	//GetControlledTank()->Fire();
 
-	AimingComponent->Fire(); //TODO don't fire every frame
-	
+	//if aiming or locked 
+	if (AimingComponent->GetFiringStatus() == EFiringStatus::Locked)
+	{
+		AimingComponent->Fire(); //TODO don't fire every frame
+	}
 }
 
 /*

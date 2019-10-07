@@ -56,13 +56,17 @@ ATank* ATankPlayerController::GetControlledTank() const
 */
 void ATankPlayerController::AimTowardCrosshair()
 {
+	if (!GetPawn()) { return; } //ex if not possessing
 	auto AimingComponent = GetPawn()->FindComponentByClass<UTankAimingComponent>();
 	if (!ensure(AimingComponent)){ return; }
 
 	FVector HitLocation; //Out Parameter
 
 	//is going to line trace
-	if (GetSightRayHitLocation(HitLocation)) //if the line trace hits the landscape
+	bool bGotHitLocation = GetSightRayHitLocation(HitLocation);
+	UE_LOG(LogTemp, Warning, TEXT("bGotHitLocation: %i"), bGotHitLocation)
+
+	if (bGotHitLocation) //if the line trace hits the landscape
 	{
 		AimingComponent->AimAt(HitLocation);
 	}
@@ -71,7 +75,7 @@ void ATankPlayerController::AimTowardCrosshair()
 //get world location of the linetrace through the crosshair, return true if it hits the landscape
 bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 {
-	bool ValidHit = true;
+	//bool ValidHit = true;
 
 	//Find the Crosshair position in px coordinates
 	int32 ViewportSizeX, ViewportSizeY;
@@ -89,12 +93,11 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& HitLocation) const
 	if (GetLookDirection(ScreenLocation, LookDirection))
 	{
 		//line trace along that look direction and see what we hit up to some max range
-		GetLookVectorHitLocation(LookDirection, HitLocation);
+		return GetLookVectorHitLocation(LookDirection, HitLocation);
 		//UE_LOG(LogTemp, Warning, TEXT("Hit Location: %s"), *HitLocation.ToString())
-
 	}
 
-	return ValidHit;
+	return false;
 }
 
 bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
