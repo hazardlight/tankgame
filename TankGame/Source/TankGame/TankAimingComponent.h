@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GenericPlatform/GenericPlatform.h"
 #include "TankAimingComponent.generated.h"
 
 //enum for aiming state
@@ -12,7 +13,8 @@ enum class EFiringStatus : uint8
 {
 	Reloading,
 	Aiming,
-	Locked
+	Locked,
+	Empty
 };
 
 //forward declaration
@@ -49,6 +51,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = State)
 	EFiringStatus FiringStatus = EFiringStatus::Reloading;
 
+	UPROPERTY(BlueprintReadOnly, Category = State)
+	int32 AmmoCount = 3;
+
 	//set this UPROPERTY because of a UE4 bug where this value was reset to NONE instead of Projectile_BP. Needs to be in the protected: category
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Setup)
 	TSubclassOf<AProjectile> ProjectileBlueprint;
@@ -61,7 +66,7 @@ private:
 
 	bool IsBarrelMoving();
 
-	void MoveBarrelToward(FVector AimDirection);
+	void MoveBarrelToward(FVector AimDir);
 
 	FVector AimDirection;
 
@@ -74,13 +79,8 @@ private:
 	//TODO declare function to rotate turret
 	//void RotateTurretToward(FVector AimDirection);
 
-
-	
-
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 	float ReloadTimeInSeconds = 3.0;
 
 	double LastFireTime = 0.0;
-
-
 };

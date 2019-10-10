@@ -29,7 +29,11 @@ void UTankAimingComponent::BeginPlay()
 
 void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds)
+	if (AmmoCount <= 0)
+	{
+		FiringStatus = EFiringStatus::Empty;
+	}
+	else if ((FPlatformTime::Seconds() - LastFireTime) < ReloadTimeInSeconds)
 	{
 		FiringStatus = EFiringStatus::Reloading;
 	}
@@ -37,7 +41,7 @@ void UTankAimingComponent::TickComponent(float DeltaTime, enum ELevelTick TickTy
 	{
 		FiringStatus = EFiringStatus::Aiming;
 	}
-	else 
+	else
 	{
 		FiringStatus = EFiringStatus::Locked;
 	}
@@ -121,13 +125,13 @@ void UTankAimingComponent::AimAt(FVector HitLocation)
 	//UE_LOG(LogTemp, Warning, TEXT("%s aiming at %s from %s. LaunchSpeed: %f"), *OurTankName, *HitLocation.ToString(), *BarrelLocation.ToString(), LaunchSpeed)
 }
 
-void UTankAimingComponent::MoveBarrelToward(FVector AimDirection)
+void UTankAimingComponent::MoveBarrelToward(FVector AimDir)
 {
 	if (!ensure(Barrel && Turret)) { return; }
 
 	//Work out difference between current barrel rotation and AimDirection
 	auto BarrelRotator = Barrel->GetForwardVector().Rotation(); //x axis
-	auto AimAsRotator = AimDirection.Rotation();
+	auto AimAsRotator = AimDir.Rotation();
 	auto DeltaRotator = AimAsRotator - BarrelRotator;
 
 	//UE_LOG(LogTemp, Warning, TEXT("AimAsRotator: %s"), *DeltaRotator.ToString())
@@ -137,7 +141,7 @@ void UTankAimingComponent::MoveBarrelToward(FVector AimDirection)
 	//Turret->Rotate(DeltaRotator.Yaw);
 
 	//this does not fix the aiming problem when aiming at -180 deg. The coordinate plane should be relative and not absolute
-	if (DeltaRotator.Yaw < 180)
+	if (FMath::Abs(DeltaRotator.Yaw) < 180)
 	{
 		Turret->Rotate(DeltaRotator.Yaw);
 	}
@@ -145,13 +149,27 @@ void UTankAimingComponent::MoveBarrelToward(FVector AimDirection)
 	{
 		Turret->Rotate(-DeltaRotator.Yaw);
 	}
-	
 }
+/*
+	void UTankAimingComponent::Reload() 
+	{
+		//Load an ammo type for the main gun
+	}
+*/
+
+/*
+void UTankAimingComponent::SelectAmmo() 
+{
+	//Selects the ammo to be loaded for the next shot
+	//Requires time for the autoloader to ready the round depending on where it is in the carousel
+}
+*/
+
 void UTankAimingComponent::Fire()
 {
-	if (FiringStatus != EFiringStatus::Reloading )
+	if ( FiringStatus != EFiringStatus::Reloading && AmmoCount != 0 )
 	{
-		//span a projectile at the socket location on the barrel
+		//spawn a projectile at the socket location on the barrel
 		if (!ensure(Barrel)) { return; }
 		if (!ensure(ProjectileBlueprint)) { return; }
 
@@ -163,6 +181,7 @@ void UTankAimingComponent::Fire()
 
 		Projectile->LaunchProjectile(LaunchSpeed);
 		LastFireTime = FPlatformTime::Seconds();
+		AmmoCount--;
 	}
 }
 EFiringStatus UTankAimingComponent::GetFiringStatus() const
