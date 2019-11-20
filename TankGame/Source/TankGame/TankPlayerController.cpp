@@ -64,7 +64,7 @@ void ATankPlayerController::AimTowardCrosshair()
 
 	//is going to line trace
 	bool bGotHitLocation = GetSightRayHitLocation(HitLocation);
-	UE_LOG(LogTemp, Warning, TEXT("bGotHitLocation: %i"), bGotHitLocation)
+	//UE_LOG(LogTemp, Warning, TEXT("bGotHitLocation: %i"), bGotHitLocation)
 
 	if (bGotHitLocation) //if the line trace hits the landscape
 	{

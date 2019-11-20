@@ -51,8 +51,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = State)
 	EFiringStatus FiringStatus = EFiringStatus::Reloading;
 
-	UPROPERTY(BlueprintReadOnly, Category = State)
-	int32 AmmoCount = 3;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = State)
+	int32 AmmoCount = 40;
 
 	//set this UPROPERTY because of a UE4 bug where this value was reset to NONE instead of Projectile_BP. Needs to be in the protected: category
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Setup)
