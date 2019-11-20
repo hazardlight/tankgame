@@ -27,7 +27,8 @@ float ATank::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEve
 	CurrentHealth -= DamageToApply;
 	if (CurrentHealth <= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Tank Destroyed"))
+		//UE_LOG(LogTemp, Warning, TEXT("Tank Destroyed"))
+		OnDeath.Broadcast();
 
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("DamageAmount = %f DamageToApply = %i"), DamageAmount, DamageToApply)
@@ -39,6 +40,13 @@ float ATank::GetHealthPercentage() const
 	return (float)CurrentHealth / (float)StartingHealth;
 }
 
+void ATank::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CurrentHealth = StartingHealth;
+
+}
 // Called when the game starts or when spawned
 /*
 void ATank::BeginPlay()
